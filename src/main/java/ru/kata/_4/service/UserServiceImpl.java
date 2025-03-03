@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Transactional
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -29,17 +28,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User passwordCoder(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return user;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return userDAO.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getById(long id) {
         User user = null;
         Optional<User> optional = userDAO.findById(id);
@@ -50,27 +52,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void save(User user) {
         userDAO.save(passwordCoder(user));
     }
 
     @Override
+    @Transactional
     public void update(User user) {
         userDAO.save(user);
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) {
         userDAO.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userDAO.findByUsername(username);
     }
 
     @Override
     @PostConstruct
+    @Transactional
     public void addDefaultUser() {
         Set<Role> roles1 = new HashSet<>();
         roles1.add(roleDAO.findById(1L).orElse(null));

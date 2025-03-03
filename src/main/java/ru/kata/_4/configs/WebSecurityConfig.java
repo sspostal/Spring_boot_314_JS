@@ -17,7 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsService;
     private final SuccessUserHandler successUserHandler;
 
-    public WebSecurityConfig(@Qualifier("userDetailsServiceImpl")UserDetailsServiceImpl userDetailsService,
+    public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsServiceImpl userDetailsService,
                              SuccessUserHandler successUserHandler) {
         this.userDetailsService = userDetailsService;
         this.successUserHandler = successUserHandler;
@@ -25,22 +25,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     protected void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-       auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin()
+        http
+                .authorizeRequests()
+                .antMatchers("/login").anonymous()
+                .antMatchers("/").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+                .antMatchers("/api/users/**").hasRole("ADMIN") // Доступ к REST API только для ADMIN
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
                 .successHandler(successUserHandler)
                 .loginProcessingUrl("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .permitAll();
         http
-                .authorizeRequests()
-                .antMatchers("/login").anonymous()
-                .antMatchers("/").access("hasAnyRole('ROLE_USER','ROLE_ADMIN')").anyRequest().authenticated();
-        http.logout()
+                .logout()
                 .permitAll()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login")
