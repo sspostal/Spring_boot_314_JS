@@ -78,17 +78,17 @@ public class UserServiceImpl implements UserService {
         roles2.add(roleDAO.findById(1L).orElse(null));
         roles2.add(roleDAO.findById(2L).orElse(null));
         User user1 = new User(
-                "Sergei",
-                "Gonsoronov", (byte) 21,
-                "gonsoronss@icloud.com",
-                "admin",
-                "admin", roles1);
-        User user2 = new User(
                 "Pat",
                 "Holman", (byte) 29,
                 "3friends@mail.ru",
                 "user",
-                "user", roles2);
+                "user", roles1);
+        User user2 = new User(
+                "Sergei",
+                "Gonsoronov", (byte) 21,
+                "gonsoronss@icloud.com",
+                "admin",
+                "admin", roles2);
         save(user1);
         save(user2);
         }
