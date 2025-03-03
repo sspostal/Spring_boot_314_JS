@@ -77,8 +77,18 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles2 = new HashSet<>();
         roles2.add(roleDAO.findById(1L).orElse(null));
         roles2.add(roleDAO.findById(2L).orElse(null));
-        User user1 = new User("Steve","Jobs",(byte) 25, "user@mail.com", "user","12345",roles1);
-        User user2 = new User("Garry","Potter",(byte) 30, "admin@mail.com", "admin","admin",roles2);
+        User user1 = new User(
+                "Sergei",
+                "Gonsoronov", (byte) 21,
+                "gonsoronss@icloud.com",
+                "admin",
+                "admin", roles1);
+        User user2 = new User(
+                "Pat",
+                "Holman", (byte) 29,
+                "3friends@mail.ru",
+                "user",
+                "user", roles2);
         save(user1);
         save(user2);
         }
